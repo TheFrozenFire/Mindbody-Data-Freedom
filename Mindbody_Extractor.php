@@ -42,13 +42,16 @@ abstract class Mindbody_Extractor {
 	}
 
 	public static function queuecall($callbacks, $clobbertime = 1) {
+		static $lastcall = 0;
+		if(time() < $lastcall + $clobbertime) sleep(($lastcall + $clobbertime) - time());
+		
 		$result = array();
 		
 		foreach($callbacks as $callback) {
 			$result[substr($callback[1], 3)] = call_user_func($callback);
-			sleep($clobbertime); // Can't touch this.
 		}
 		
+		$lastcall = time();
 		return $result;
 	}
 	

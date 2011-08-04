@@ -54,11 +54,11 @@ class Client_Extractor extends Mindbody_Extractor {
 		$call->Request = new GetActiveClientMembershipsRequest();
 		$call->Request->SourceCredentials = $this->sourcecredentials;
 		
-		$clients = $getClients();
+		$clients = $this->GetClientIDs();
 		$clientMemberships = array();
 		
-		foreach($clients as $client) {
-			$call->Request->ClientID = $client->ID;
+		foreach($clients as $clientID) {
+			$call->Request->ClientID = $clientID;
 			$result = $this->service->GetActiveClientMemberships($call);
 			$clientMemberships[$client->ID] = $result->ClientMemberships;
 		}
@@ -71,11 +71,11 @@ class Client_Extractor extends Mindbody_Extractor {
 		$call->Request = new GetClientContractsRequest();
 		$call->Request->SourceCredentials = $this->sourcecredentials;
 		
-		$clients = $getClients();
+		$clients = $this->GetClientIDs();
 		$clientContracts = array();
 		
-		foreach($clients as $client) {
-			$call->Request->ClientID = $client->ID;
+		foreach($clients as $clientID) {
+			$call->Request->ClientID = $clientID;
 			$result = $this->service->ClientContracts($call);
 			$clientContracts[$client->ID] = $result->Contracts;
 		}
@@ -88,16 +88,33 @@ class Client_Extractor extends Mindbody_Extractor {
 		$call->Request = new GetClientServicesRequest();
 		$call->Request->SourceCredentials = $this->sourcecredentials;
 		
-		$clients = $getClients();
+		$clients = $this->GetClientIDs();
 		$clientServices = array();
 		
-		foreach($clients as $client) {
-			$call->Request->ClientID = $client->ID;
+		foreach($clients as $clientID) {
+			$call->Request->ClientID = $clientID;
 			$result = $this->service->ClientServices($call);
 			$clientServices[$client->ID] = $result->ClientServices;
 		}
 		
 		return $clientServices;
+	}
+	
+	protected GetClientIDs($override = false) {
+		static $ids = array();
+		if(!empty($ids) && !$override) return $ids; else $ids = array();
+		
+		$call = new GetClients();
+		$call->Request = new GetClientsRequest();
+		$call->Request->SourceCredentials = $this->sourcecredentials;
+		
+		$call->Request->XMLDetail = "bare";
+		
+		$result = $this->service->GetClients($call);
+		
+		foreach($result->GetClientsResult->Clients as $client) $ids[] = $client->ID;
+		
+		return $ids;
 	}
 }
 ?>
