@@ -7,8 +7,6 @@ require_once("api/services/Site_x0020_Service.php");
 require_once("api/services/Staff_x0020_Service.php");
 
 abstract class Mindbody_Extractor {
-	protected $sourcename;
-	protected $password;
 	protected $service;
 	protected $sourcecredentials;
 
