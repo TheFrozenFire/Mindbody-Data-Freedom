@@ -16,6 +16,30 @@ abstract class Mindbody_Extractor {
 		$this->sourcecredentials->Password = $password;
 		$this->sourcecredentials->SiteIDs = $siteIDs;
 	}
+	
+	public static get_all($sourcename, $password, $siteIDs) {
+		require_once("services/Appointment_Extractor.php");
+		require_once("services/Class_Extractor.php");
+		require_once("services/Client_Extractor.php");
+		require_once("services/Sale_Extractor.php");
+		require_once("services/Site_Extractor.php");
+		require_once("services/Staff_Extractor.php");
+	
+		$result = array();
+		foreach(array(
+			"Appointment_Extractor",
+			"Class_Extractor",
+			"Client_Extractor",
+			"Sale_Extractor",
+			"Site_Extractor",
+			"Staff_Extractor"
+		) as $servicename) {
+			if(class_exists($servicename)) $service = new $servicename($sourcename, $password, $siteIDs);
+			$result[$servicename] = $service->get_all();
+		}
+		
+		return $result;
+	}
 
 	abstract public function get_all();
 }
