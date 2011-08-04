@@ -7,20 +7,15 @@ class Sites_Extractor extends Mindbody_Extractor {
 	}
 
 	public function get_all($clobbertime = 1) {
-		$result = array();
-		
-		foreach(array(
+		$callbacks = array(
 			array($this, "GetSites"),
 			array($this, "GetLocations"),
 			array($this, "GetPrograms"),
 			array($this, "GetSessionTypes"),
 			array($this, "GetRelationships")
-		) as $callback) {
-			$result[substr($callback[1], 3)] = call_user_func($callback);
-			sleep($clobbertime); // Can't touch this.
-		}
+		);
 		
-		return $result;
+		return parent::queuecall($callbacks, $clobbertime);
 	}
 	
 	public function GetSites() {
@@ -87,17 +82,5 @@ class Sites_Extractor extends Mindbody_Extractor {
 		
 		return $result->GetRelationshipsResult->Relationships;
 	}
-	
-	/*
-	public function Get() {
-		$call = new Get();
-		$call->Request = new GetRequest();
-		$call->Request->SourceCredentials = $this->sourcecredentials;
-		
-		$result = $this->service->Get($call);
-		
-		return $result->GetResult->;
-	}
-	*/
 }
 ?>

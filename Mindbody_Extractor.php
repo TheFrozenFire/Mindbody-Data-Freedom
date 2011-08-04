@@ -41,6 +41,28 @@ abstract class Mindbody_Extractor {
 		return $result;
 	}
 
-	abstract public function get_all();
+	public static function queuecall($callbacks, $clobbertime = 1) {
+		$result = array();
+		
+		foreach($callbacks as $callback) {
+			$result[substr($callback[1], 3)] = call_user_func($callback);
+			sleep($clobbertime); // Can't touch this.
+		}
+		
+		return $result;
+	}
+	
+	/*
+	Template for calls
+	public function Get() {
+		$call = new Get();
+		$call->Request = new GetRequest();
+		$call->Request->SourceCredentials = $this->sourcecredentials;
+		
+		$result = $this->service->Get($call);
+		
+		return $result->GetResult->;
+	}
+	*/
 }
 ?>
