@@ -17,13 +17,18 @@ abstract class Mindbody_Extractor {
 		$this->sourcecredentials->SiteIDs = $siteIDs;
 	}
 	
-	public static get_all($sourcename, $password, $siteIDs) {
+	abstract public function get_all($clobbertime = 1);
+	
+	public static function _get_all($sourcename, $password, $siteIDs, $clobbertime = 1) {
 		require_once("services/Appointment_Extractor.php");
 		require_once("services/Class_Extractor.php");
 		require_once("services/Client_Extractor.php");
 		require_once("services/Sale_Extractor.php");
 		require_once("services/Site_Extractor.php");
 		require_once("services/Staff_Extractor.php");
+		
+		$preload = new Appointment_x0020_Service();
+		unset($preload);
 	
 		$result = array();
 		foreach(array(
@@ -35,7 +40,7 @@ abstract class Mindbody_Extractor {
 			"Staff_Extractor"
 		) as $servicename) {
 			if(class_exists($servicename)) $service = new $servicename($sourcename, $password, $siteIDs);
-			$result[$servicename] = $service->get_all();
+			$result[$servicename] = $service->get_all($clobbertime);
 		}
 		
 		return $result;

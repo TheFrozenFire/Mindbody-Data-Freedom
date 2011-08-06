@@ -31,14 +31,14 @@ class Staff_Extractor extends Mindbody_Extractor {
 		$call->Request->SourceCredentials = $this->sourcecredentials;
 		
 		$staffList = $this->GetStaff();
-		
-		$result = array();
-		
+		$staffIDs = array();
 		foreach($staffList as $staffItem) {
-			$call->Request->ID = $staffItem->ID;
-			$staffPermissions = $this->service->GetStaffPermissions($call);
-			$result[$staffItem->ID] = $staffPermissions->Permissions;
+			$staffIDs[] = $staffItem->ID;
 		}
+		
+		$call->Request->StaffID = $staffIDs;
+		$staffPermissions = $this->service->GetStaffPermissions($call);
+		$result = $staffPermissions->Permissions;
 		
 		return $result;
 	}

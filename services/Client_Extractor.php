@@ -100,7 +100,7 @@ class Client_Extractor extends Mindbody_Extractor {
 		return $clientServices;
 	}
 	
-	protected GetClientIDs($override = false) {
+	protected function GetClientIDs($override = false) {
 		static $ids = array();
 		if(!empty($ids) && !$override) return $ids; else $ids = array();
 		
@@ -108,7 +108,7 @@ class Client_Extractor extends Mindbody_Extractor {
 		$call->Request = new GetClientsRequest();
 		$call->Request->SourceCredentials = $this->sourcecredentials;
 		
-		$call->Request->XMLDetail = "bare";
+		$call->Request->XMLDetail = "Bare";
 		
 		$result = $this->service->GetClients($call);
 		
